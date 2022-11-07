@@ -1,4 +1,3 @@
-import { getByTitle } from '@testing-library/react';
 import { initializeApp } from 'firebase/app';
 
 import {
@@ -59,7 +58,7 @@ export const addCollectionAndDocuments = async (
   });
 
   await batch.commit();
-  console.log('done');
+  //console.log('done');
 };
 
 export const getCategoriesAndDocuments = async () => {
