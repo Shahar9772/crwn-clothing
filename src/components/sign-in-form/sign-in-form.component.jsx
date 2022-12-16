@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import {
+  emailSignInStart,
+  googleSignInStart,
+} from '../../store/user/user.action';
 
 import FormInput from '../form-input/form-input.component';
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
-
-import {
-  signInUserWithEmailAndPassword,
-  signInWithGooglePopup,
-} from '../../utils/firebase/firebase.utils';
 
 import './sign-in-form.styles.scss';
 
@@ -16,6 +17,8 @@ const defaultFormFields = {
 };
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
+
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
@@ -23,34 +26,19 @@ const SignInForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const SignInWithGoogle = async () => {
-    await signInWithGooglePopup();
+  const SignInWithGoogle = () => {
+    dispatch(googleSignInStart());
+    resetFormFields();
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    try {
-      await signInUserWithEmailAndPassword(email, password);
-
-      resetFormFields();
-    } catch (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          alert('Incorrect password for email');
-          break;
-        case 'auth/user-not-found':
-          alert('No user associated with this email');
-          break;
-        default:
-          console.log(error);
-      }
-    }
+    dispatch(emailSignInStart(email, password));
+    resetFormFields();
   };
 
   const InputChangeHandler = (event) => {
     const { name, value } = event.target;
-
     setFormFields({ ...formFields, [name]: value });
   };
 
@@ -58,6 +46,7 @@ const SignInForm = () => {
     <div className='sign-in-container'>
       <h2> Already have an account? </h2>
       <span> Sign in with your email and password </span>
+
       <form onSubmit={handleSubmit}>
         <FormInput
           label='Email'
@@ -78,6 +67,7 @@ const SignInForm = () => {
           onChange={InputChangeHandler}
           value={password}
         />
+
         <div className='buttons-container'>
           <Button type='submit'>Sign In</Button>
           <Button

@@ -18,8 +18,6 @@ export const removeCartItem = (cartItems, cartItemToRemove) => {
 };
 
 export const addCartItem = (cartItems, productToAdd) => {
-  console.log(cartItems);
-
   const existingCartItem = cartItems.find((cartItem) => {
     return cartItem.id === productToAdd.id;
   });
