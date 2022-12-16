@@ -22,12 +22,12 @@ import {
 
 // This function is being used in all the sagas
 /******************************************************/
-function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
+function* getSnapshotFromUserAuth(userAuth, additionalInformation) {
   try {
     const userSnapshot = yield call(
       createUserDocumentFromAuth,
       userAuth,
-      additionalDetails
+      additionalInformation
     );
     yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
   } catch (error) {
@@ -65,9 +65,9 @@ function* signUp({ payload: { email, password, displayName } }) {
   }
 }
 
-function* signInAfterSignUp({ payload: { user, additionalDetails } }) {
+function* signInAfterSignUp({ payload: { user, additionalInformation } }) {
   try {
-    yield call(getSnapshotFromUserAuth, user, additionalDetails);
+    yield call(getSnapshotFromUserAuth, user, additionalInformation);
   } catch (error) {
     yield put(signInFailed(error));
   }
